@@ -4,6 +4,13 @@
 // initialize the board at first run
 board* board::_board = NULL;
 
+board::board(){
+	for (int i = 0; i < 8; i++){
+		for (int j = 0; j < 8; j++)
+			_squares[i][j] = new square(i, j);
+	}
+}
+
 // access the static member board
 board* board::access_board()
 {
@@ -26,13 +33,15 @@ board::~board(){
 // check vertical
 bool board::isVerticalClear(const square& initialSquare,const square& finalSquare) const{
 	// check for horizontal move and return error if true
-	if (initialSquare.getX() - finalSquare.getX() != 0)
-		throw string("ERROR!! Inputs of function must be on the same horizontal.\n");
+	if (initialSquare.getX() - finalSquare.getX() != 0){
+		return false;
+		//throw string("ERROR!! Inputs of function must be on the same horizontal.\n");
+	}
 	else{
 		bool sign = initialSquare.getY() < finalSquare.getY();
 		int x_static = initialSquare.getX();
 		// run through the squares in between and return false if any occupier is detected
-		for (int y = initialSquare.getY(); y != finalSquare.getY(); y += sign)
+		for (int y = initialSquare.getY() + int(sign); y != finalSquare.getY(); y += sign)
 			if (_squares[x_static][y]->getOccupier() != NULL)
 				// if occupier spotted at any stage return negative
 				return false;
@@ -44,13 +53,15 @@ bool board::isVerticalClear(const square& initialSquare,const square& finalSquar
 // check vertical
 bool board::isHorizontalClear(const square& initialSquare,const square& finalSquare) const{
 	// check for horizontal move and return error if true
-	if (initialSquare.getY() - finalSquare.getY() != 0)
-		throw string("ERROR!! Inputs of function must be on the same vertical.\n");
+	if (initialSquare.getY() - finalSquare.getY() != 0){
+		return false;
+		//throw string("ERROR!! Inputs of function must be on the same vertical.\n");
+	}
 	else{
 		bool sign = initialSquare.getX() < finalSquare.getX();
 		int y_static = initialSquare.getY();
 		// run through the squares in between and return false if any occupier is detected
-		for (int x = initialSquare.getX(); x != finalSquare.getX(); x += sign)
+		for (int x = initialSquare.getX() + sign; x != finalSquare.getX(); x += sign)
 			if (_squares[x][y_static]->getOccupier() != NULL)
 				// if occupier spotted at any stage return negative
 				return false;
@@ -62,14 +73,16 @@ bool board::isHorizontalClear(const square& initialSquare,const square& finalSqu
 // check vertical
 bool board::isDiagonalClear(const square& initialSquare,const square& finalSquare) const{
 	// check for horizontal move and return error if true
-	if ((initialSquare.getX() - finalSquare.getX()) != (initialSquare.getY() - finalSquare.getY()))
-		throw string("ERROR!! Inputs of function must be on the same diagonal.\n");
+	if (abs(initialSquare.getX() - finalSquare.getX()) != abs(initialSquare.getY() - finalSquare.getY())){
+		return false;
+		//throw string("ERROR!! Inputs of function must be on the same diagonal.\n");
+	}
 	else{
 		bool sign_x = initialSquare.getX() < finalSquare.getX();
 		bool sign_y = initialSquare.getY() < finalSquare.getY();
 
 		// run through the squares in between and return false if any occupier is detected
-		for (int counter = 0; counter < abs(initialSquare.getX() - finalSquare.getX()); ++counter){
+		for (int counter = 1; counter < abs(initialSquare.getX() - finalSquare.getX()); ++counter){
 			int x_current = initialSquare.getX() + int(counter*sign_x);
 			int y_current = initialSquare.getY() + int(counter*sign_y);
 			if (_squares[x_current][y_current]->getOccupier() != NULL)
@@ -83,7 +96,9 @@ bool board::isDiagonalClear(const square& initialSquare,const square& finalSquar
 
 bool board::isEndRow(const square& currentSquare) const{
 	if (currentSquare.getY() == 0 || currentSquare.getY() == 7)
-		return 0;
+		return true;
+	else
+		return false;
 }
 
 square* board::getSquare(int x, int y){
@@ -92,6 +107,7 @@ square* board::getSquare(int x, int y){
 
 
 void board::showBoard(bool isWhite){
+	cout << "\n\n=======================================BOARD=======================================\n\n";
 	if (isWhite == true){
 		for (int y = 7; y >= 0; y--){
 			cout << "\t" << y + 1;
@@ -103,27 +119,28 @@ void board::showBoard(bool isWhite){
 			}
 			cout << endl;
 		}
+		cout << "\t";
 		for (char x = 'a'; x <= 'h'; x++)
 			cout << "\t" << x;
 		cout << endl;
-		cout << "========================BOARD================================";
 	}
 	else{
 		for (int y = 0; y < 8; y++){
 			cout << "\t" << y + 1;
 			for (int x = 7; x >= 0; x--){
-				if (_squares[x][y]->getOccupier() == NULL)
+				if (_squares[x][y]->getOccupier() != NULL)
 					cout << "\t" << _squares[x][y]->getOccupier()->printPiece();
 				else
 					cout << "\t" << "  ";
 			}
 			cout << endl;
 		}
+		cout << "\t";
 		for (char x = 'h'; x >= 'a'; x--)
 			cout << "\t" << x;
 		cout << endl;
-		cout << "========================BOARD================================";
 	}
+	cout << "=======================================BOARD=======================================\n\n";
 }
 
 

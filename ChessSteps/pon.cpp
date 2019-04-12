@@ -14,6 +14,8 @@ pon::~pon() {
 
 // the check move function
 bool pon::isMoveAllowed(square& location){
+
+	bool allowed = false;
 	// Treat each case in part. Start with simple move on the vertical
 	int translationX = int(location.getX()) - int(this->getSquare()->getX());
 	int translationY = location.getY() - this->getSquare()->getY();
@@ -24,20 +26,29 @@ bool pon::isMoveAllowed(square& location){
 
 	// There are 4 cases that need treatment
 	// valid move if moving 1 square forward to unoccupied square
-	if ((location.getOccupier() == NULL) && translationY == 1 && translationX == 0)
-		return true;
+	if ((location.getOccupier() == NULL) && translationY == 1 && translationX == 0){
+		allowed =  true;
+	}
 
 	// second case is the oportunity to move 2 spaces the first time
-	else if (!this->_hasMoved && translationY == 2 && translationX == 0 &&
+	else if (!(this->_hasMoved) && translationY == 2 && translationX == 0 &&
 		board::access_board()->isVerticalClear(*(this->getSquare()), location))
-		return true;
+	{
+		allowed = true;
+	}
 
 	// valid move if capturing a piece on adjacent diagonal
 	else if ((location.getOccupier()->isWhite() == this->isWhite()) && translationY == 1 &&
 		abs(translationX) == 1)
-		return true;
-	else
-		return false;
+	{
+		allowed = true;
+	}
+
+	else{
+		allowed = false;
+	}
+
+	return allowed;
 }
 
 vector<square> pon::possibleLocations(){

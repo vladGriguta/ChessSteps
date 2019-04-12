@@ -10,8 +10,8 @@ bool knight::isMoveAllowed(square& location){
 	int translationY = abs(location.getY() - this->getSquare()->getY());
 
 	// the knight i the only chess piece that can jump over other pieces
-	// therefore, only check if one translation is 1 and the other is 3
-	if ((translationX + translationY) == 4 && (translationX * translationY) == 3)
+	// therefore, only check if one translation is 1 and the other is 2
+	if ((translationX + translationY) == 3 && (translationX * translationY) == 2)
 		return true;
 	else
 		return false;

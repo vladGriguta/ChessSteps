@@ -21,6 +21,7 @@ a move is allowed. These functionalities are:
 
 class board{
 private:
+	
 	// declare the board as a static instance of the class board that is
 	// then the same for all instances
 	static board* _board;
@@ -28,6 +29,10 @@ private:
 	square* _squares[8][8];
 
 public:
+
+	// default constructor
+	board();
+
 	// access the static member board
 	static board* access_board();
 

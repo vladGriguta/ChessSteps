@@ -52,7 +52,6 @@ vector<square*> piece::possibleLocations()
 {
 	vector<square*> locations;
 	// brute force for now
-
 	for (int x = 0; x < 8; x++)
 		for (int y = 0; y < 8; y++)
 			if (this->isMoveAllowed(*(board::access_board()->getSquare(x, y)))){

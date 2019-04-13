@@ -49,6 +49,27 @@ bool player::inCheck() const{
 	return false;
 }
 
+bool player::inCheckMate() const{
+	return false;
+	/*
+	if (this->inCheck())
+	{
+		for (auto it_pieces = _remainingPieces.begin(); it_pieces != _remainingPieces.end(); ++it_pieces)
+		{
+			// get the possible destination of each piece
+			vector<square*> possibleDestinations = (*it_pieces)->possibleLocations();
+
+			for (auto it_loc = possibleDestinations.begin(); it_loc != possibleDestinations.begin(); ++it_loc){
+
+			}
+		}
+	}
+	else{
+		return false;
+	}
+	*/
+}
+
 bool player::tryMove(square* fromLocation, square* toLocation){
 	// Plan:
 	// check that the move of the piece is valid (functionality of piece isMoveAllowed)
@@ -57,34 +78,45 @@ bool player::tryMove(square* fromLocation, square* toLocation){
 	// king in check
 	
 	bool validMove = false;
-	if (!this->inCheck()){
+	bool currentState = this->inCheck();
+	{
 		if (fromLocation->getOccupier()->isMoveAllowed(*toLocation)){
+			// execute the move temporarily, then check if the new position player is in check
+
 			validMove = true;
 			// change the location of the moved piece
 			fromLocation->getOccupier()->setSquare(toLocation);
-			cout << toLocation->getX() << "\t" << toLocation->getY() << "\n";
 			//cout << toLocation->getOccupier()->getNumberMoves() << "\n";
 			toLocation->setOccupier(fromLocation->getOccupier());
 			fromLocation->setOccupier(NULL);
 			// increment the number of moves of the piece
 			toLocation->getOccupier()->incrementMoves();
 			
+			// if player in check, go back and un-validate the move
+			if (this->inCheck()){
+				if (currentState)
+					cout << "Try to get out of check!\n";
+				else
+					cout << "The move that you executed got you in check! Be cautious!\n";
+
+				validMove = false;
+				// change back the location of the moved piece
+				fromLocation->setOccupier(toLocation->getOccupier());
+				fromLocation->getOccupier()->setSquare(fromLocation);
+				toLocation->setOccupier(NULL);
+				// decrement the number of moves of the piece
+				fromLocation->getOccupier()->decrementMoves();
+			}
+
 			// in case of pons, check if can be promoted
 			if (board::access_board()->isEndRow(*toLocation)){
-				cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
 				toLocation->getOccupier()->promotion();
-				cout << toLocation->getOccupier()->printPiece() << "\n";
 			}
-			
 		}
 		else{
 			cout << "Unsuccessfull! The path between the squares is not clear!!\n";
 			validMove = false;
 		}
-	}
-	else{
-		cout << "Unsuccessful!! You are in check!\n";
-		validMove = false;
 	}
 	return validMove;
 }
@@ -97,53 +129,56 @@ bool player::tryCapture(square* fromLocation, square* toLocation){
 	// king in check
 
 	bool validMove = false;
-
-	if (!this->inCheck()){
+	bool currentState = this->inCheck();
+	{
 		if (fromLocation->getOccupier()->isMoveAllowed(*toLocation)){
+
 			validMove = true;
 			// first deal with the oposite piece situated in toLocation
 			toLocation->getOccupier()->setSquare(NULL);
+			piece* tempCaptured = toLocation->getOccupier();
 			this->addCaptured(toLocation->getOccupier());
-			cout << "Player " << this->getName() << " now captured " << this->_capturedPieces.size() << " pieces\n";
-			cout << "These pieces are: ";
-			for (auto it_capturedPieces = this->_capturedPieces.begin(); it_capturedPieces != this->_capturedPieces.end(); ++it_capturedPieces){
-				cout << (*it_capturedPieces)->printPiece() << ",  ";
-			}
-			cout << "\n";
 			session::other_player(this->getName())->deletePiece(toLocation->getOccupier());
-			cout << "The opposing player now has " << session::other_player(this->getName())->getRemainingPieces().size() + 1 << " pieces.\n";
-			cout << "These pieces are: ";
 
-			for (auto it_opponentPieces = session::other_player(this->getName())->_remainingPieces.begin();
-				it_opponentPieces != session::other_player(this->getName())->_remainingPieces.end(); ++it_opponentPieces)
-			{
-				cout << (*it_opponentPieces)->printPiece() << ",  ";
-			}
-			cout << session::other_player(this->getName())->getKing()->printPiece() << ".\n";
-			// session::other_player(this)->deletePiece(toLocation->getOccupier());
-			toLocation->setOccupier(NULL);
 			// change the location of the moved piece
 			fromLocation->getOccupier()->setSquare(toLocation);
+			toLocation->setOccupier(NULL);
 			toLocation->setOccupier(fromLocation->getOccupier());
 			fromLocation->setOccupier(NULL);
+
 			// increment the number of moves of the piece
 			toLocation->getOccupier()->incrementMoves();
 
+			// if player in check, go back and un-validate the move
+			if (this->inCheck()){
+				if (currentState)
+					cout << "Try to get out of check!\n";
+				else
+					cout << "The move that you executed got you in check! Be cautious!\n";
+
+				validMove = false;
+				fromLocation->setOccupier(toLocation->getOccupier());
+				fromLocation->getOccupier()->setSquare(fromLocation);
+
+				toLocation->setOccupier(tempCaptured);
+				tempCaptured->setSquare(toLocation);
+
+				session::other_player(this->getName())->addPiece(tempCaptured);
+
+				// decrement the number of moves of the piece
+				fromLocation->getOccupier()->decrementMoves();
+
+			}
+
 			// check whether promotion is appropriate and apply it for the case of pons
 			if (board::access_board()->isEndRow(*toLocation)){
-				//cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
 				toLocation->setOccupier(toLocation->getOccupier()->promotion());
-				//cout << toLocation->getOccupier()->printPiece() << "\n";
 			}
 		}
 		else{
 			cout << "Unsuccessfull! The path between the squares is not clear!!\n";
 			validMove = false;
 		}
-	}
-	else{
-		cout << "Unsuccessfull!! You are in check!\n";
-		validMove = false;
 	}
 	return validMove;
 }
@@ -159,6 +194,9 @@ void player::move()
 		board::access_board()->showBoard(this->isWhite());
 		string moveString;
 		cout << "Player " << this->getName() << " is on the move.\n";
+		if (this->inCheck()){
+			cout << "Bear in mind that you are in check!\n";
+		}
 		cout << "Please enter the initial square and the final square. (e.g. c2c4):\n";
 		cin >> moveString;
 		cin.ignore();
@@ -258,4 +296,11 @@ void player::deletePiece(piece* ownCapturedPiece){
 	_remainingPieces.erase(positionToDelete);
 	// Now delete the piece from the board
 	ownCapturedPiece->setSquare(NULL);
+}
+
+
+void player::deleteCapturedPiece(piece* oppositeCapturedPiece){
+	// erase the piece from the vector of captured pieces
+	auto positionToDelete = find(_capturedPieces.begin(), _capturedPieces.end(), oppositeCapturedPiece);
+	_capturedPieces.erase(positionToDelete);
 }

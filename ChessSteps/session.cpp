@@ -163,8 +163,14 @@ void session::runSession(){
 	session::initialize();
 
 	while (true) {
-		_currentPlayer->move();
-		_currentPlayer = other_player(_currentPlayer->getName());
+		if (!_currentPlayer->inCheckMate()){
+			_currentPlayer->move();
+			_currentPlayer = other_player(_currentPlayer->getName());
+		}
+		else{
+			cout << "The game is OVER. The winner is " << other_player(_currentPlayer->getName())->getName() << "\n";
+			cout << "CONGRATULATIONS!";
+		}
 	}
 
 }

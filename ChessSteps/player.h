@@ -51,6 +51,9 @@ public:
 	// check if player is in check
 	bool inCheck() const;
 
+	// check if player in check mate
+	bool inCheckMate() const;
+
 	// try to execute one move
 	bool tryMove(square* fromLocation, square* toLocation);
 
@@ -63,8 +66,11 @@ public:
 	// append to captured pieces
 	void addCaptured(piece* capturedPiece);
 
-	// delete captured piece
+	// delete own piece
 	void deletePiece(piece* ownCapturedPiece);
+
+	// delete piece from captured pieces
+	void deleteCapturedPiece(piece* oppositeCapturedPiece);
 
 	// append new piece to player (in case of promotion)
 	void addPiece(piece* newPiece);

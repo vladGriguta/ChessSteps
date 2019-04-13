@@ -49,22 +49,7 @@ bool pon::isMoveAllowed(square& location){
 	else{
 		allowed = false;
 	}
-	if (allowed == true)
-		cout << "Pon returned allowed.\n";
-	else
-		cout << "Pon returned not allowed.\n";
 	return allowed;
-}
-
-vector<square> pon::possibleLocations(){
-	vector<square> locations;
-	// brute force for now
-	for (int i = 0; i < 64; i++){
-		square currentSquare = square(i);
-		if (this->isMoveAllowed(currentSquare))
-			locations.push_back(currentSquare);
-	}
-	return locations;
 }
 
 piece* pon::promotion(){
@@ -81,7 +66,7 @@ piece* pon::promotion(){
 	return newPiece;
 }
 
-string pon::printPiece(){
+string pon::printPiece() const{
 	if (this->isWhite() == true)
 		return "WP";
 	else

@@ -16,24 +16,11 @@ bool queen::isMoveAllowed(square& location){
 	else if (board::access_board()->isDiagonalClear(*(this->getSquare()), location))
 		return true;
 	else{
-		cout << "QQQQQQUEEN could not be moved\n";
 		return false;
 	}
 }
 
-vector<square> queen::possibleLocations(){
-	vector<square> locations;
-	// brute force for now
-	for (int i = 0; i < 64; i++){
-		square currentSquare = square(i);
-		if (this->isMoveAllowed(currentSquare))
-			locations.push_back(currentSquare);
-	}
-	return locations;
-}
-
-
-string queen::printPiece(){
+string queen::printPiece() const{
 	if (this->isWhite() == true)
 		return "WQ";
 	else

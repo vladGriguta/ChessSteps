@@ -1,5 +1,8 @@
+#include<algorithm>
+
 #include "player.h"
 #include "board.h"
+#include "session.h"
 
 // constructor
 player::player(string name, bool isWhite, king* inking, vector<piece*> pieces) : _name(name),
@@ -38,13 +41,11 @@ piece* player::getKing() const{
 
 // check if player is in check
 bool player::inCheck() const{
-	/*
 	// loop through the opponent pieces
-	for (vector<piece*>::iterator it_pieces = session::other_player(this->getName())->getRemainingPieces().begin();
-		it_pieces != session::other_player(this->getName())->getRemainingPieces().end(); ++it_pieces)
+	for (vector<piece*>::iterator it_pieces = session::other_player(this->getName())->_remainingPieces.begin();
+		it_pieces != session::other_player(this->getName())->_remainingPieces.end(); ++it_pieces)
 		if ((*it_pieces)->isMoveAllowed(*(this->getKing()->getSquare())))
 			return true;
-	*/
 	return false;
 }
 
@@ -69,7 +70,6 @@ bool player::tryMove(square* fromLocation, square* toLocation){
 			toLocation->getOccupier()->incrementMoves();
 			
 			// in case of pons, check if can be promoted
-			cout <<"The y location is "<< toLocation->getY()<<"\n";
 			if (board::access_board()->isEndRow(*toLocation)){
 				cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
 				toLocation->getOccupier()->promotion();
@@ -78,13 +78,14 @@ bool player::tryMove(square* fromLocation, square* toLocation){
 			
 		}
 		else{
-			cout << "Move is not valid due to board arrangements!...\n";
-			cout << "Please try again.\n";
+			cout << "Unsuccessfull! The path between the squares is not clear!!\n";
 			validMove = false;
 		}
 	}
-	else
+	else{
+		cout << "Unsuccessful!! You are in check!\n";
 		validMove = false;
+	}
 	return validMove;
 }
 
@@ -104,6 +105,21 @@ bool player::tryCapture(square* fromLocation, square* toLocation){
 			toLocation->getOccupier()->setSquare(NULL);
 			this->addCaptured(toLocation->getOccupier());
 			cout << "Player " << this->getName() << " now captured " << this->_capturedPieces.size() << " pieces\n";
+			cout << "These pieces are: ";
+			for (auto it_capturedPieces = this->_capturedPieces.begin(); it_capturedPieces != this->_capturedPieces.end(); ++it_capturedPieces){
+				cout << (*it_capturedPieces)->printPiece() << ",  ";
+			}
+			cout << "\n";
+			session::other_player(this->getName())->deletePiece(toLocation->getOccupier());
+			cout << "The opposing player now has " << session::other_player(this->getName())->getRemainingPieces().size() + 1 << " pieces.\n";
+			cout << "These pieces are: ";
+
+			for (auto it_opponentPieces = session::other_player(this->getName())->_remainingPieces.begin();
+				it_opponentPieces != session::other_player(this->getName())->_remainingPieces.end(); ++it_opponentPieces)
+			{
+				cout << (*it_opponentPieces)->printPiece() << ",  ";
+			}
+			cout << session::other_player(this->getName())->getKing()->printPiece() << ".\n";
 			// session::other_player(this)->deletePiece(toLocation->getOccupier());
 			toLocation->setOccupier(NULL);
 			// change the location of the moved piece
@@ -113,18 +129,22 @@ bool player::tryCapture(square* fromLocation, square* toLocation){
 			// increment the number of moves of the piece
 			toLocation->getOccupier()->incrementMoves();
 
-			// in case of pons check whether promotion is appropriate
+			// check whether promotion is appropriate and apply it for the case of pons
 			if (board::access_board()->isEndRow(*toLocation)){
-				cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
+				//cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
 				toLocation->setOccupier(toLocation->getOccupier()->promotion());
-				cout << toLocation->getOccupier()->printPiece() << "\n";
+				//cout << toLocation->getOccupier()->printPiece() << "\n";
 			}
 		}
-		else
+		else{
+			cout << "Unsuccessfull! The path between the squares is not clear!!\n";
 			validMove = false;
+		}
 	}
-	else
+	else{
+		cout << "Unsuccessfull!! You are in check!\n";
 		validMove = false;
+	}
 	return validMove;
 }
 
@@ -136,8 +156,9 @@ void player::move()
 {
 	// read positions of piece that will be moved
 	while (true){
-		board::access_board()->showBoard(true);
+		board::access_board()->showBoard(this->isWhite());
 		string moveString;
+		cout << "Player " << this->getName() << " is on the move.\n";
 		cout << "Please enter the initial square and the final square. (e.g. c2c4):\n";
 		cin >> moveString;
 		cin.ignore();
@@ -148,13 +169,13 @@ void player::move()
 		try{
 			cout << "Trying to read the string " << moveString << "\n";
 			xi = int(moveString.at(0) - 'a');
-			cout << char('a' + xi) << "\n";
+			//cout << char('a' + xi) << "\n";
 			yi = int(moveString.at(1) - '0') - 1;
-			cout << yi + 1 << "\n";
+			//cout << yi + 1 << "\n";
 			xf = int(moveString.at(2) - 'a');
-			cout << char('a' + xf) << "\n";
+			//cout << char('a' + xf) << "\n";
 			yf = int(moveString.at(3) - '0') - 1;
-			cout << yf + 1 << "\n";
+			//cout << yf + 1 << "\n";
 		}
 		catch (...){
 			//cerr << exc.what();
@@ -197,7 +218,7 @@ void player::move()
 				break;
 			}
 			else{
-				cout << "Unsuccessful due to arrangement of the board!\n";
+				cout << "Please try again!\n";
 				continue;
 			}
 		}
@@ -228,6 +249,13 @@ void player::addPiece(piece* new_piece){
 
 // add captured piece
 void player::addCaptured(piece* capturedPiece){
-	capturedPiece->setSquare(NULL);
 	_capturedPieces.push_back(capturedPiece);
+}
+
+void player::deletePiece(piece* ownCapturedPiece){
+	// find pointer ownCapturedPiece in vector of pointers _remainingPieces
+	auto positionToDelete = find(_remainingPieces.begin(), _remainingPieces.end(), ownCapturedPiece);
+	_remainingPieces.erase(positionToDelete);
+	// Now delete the piece from the board
+	ownCapturedPiece->setSquare(NULL);
 }

@@ -21,14 +21,12 @@ public:
 
 	// here is the stage where we can fully assess whether a move is allowed
 	bool isMoveAllowed(square& location);
-	//bool moveToSquare(player* byPlayer, square& location);
-	vector<square> possibleLocations();
 
 	// This class has a special functionality: Promotion
 	piece* promotion();
 
 
 	// need to define a fancy way to represent the piece
-	string printPiece();
+	string printPiece() const;
 };
 #endif

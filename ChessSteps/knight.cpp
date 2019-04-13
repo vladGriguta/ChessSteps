@@ -17,18 +17,7 @@ bool knight::isMoveAllowed(square& location){
 		return false;
 }
 
-vector<square> knight::possibleLocations(){
-	vector<square> locations;
-	// brute force for now
-	for (int i = 0; i < 64; i++){
-		square currentSquare = square(i);
-		if (this->isMoveAllowed(currentSquare))
-			locations.push_back(currentSquare);
-	}
-	return locations;
-}
-
-string knight::printPiece(){
+string knight::printPiece() const{
 	if (this->isWhite() == true)
 		return "WN";
 	else

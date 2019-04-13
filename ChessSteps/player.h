@@ -63,6 +63,9 @@ public:
 	// append to captured pieces
 	void addCaptured(piece* capturedPiece);
 
+	// delete captured piece
+	void deletePiece(piece* ownCapturedPiece);
+
 	// append new piece to player (in case of promotion)
 	void addPiece(piece* newPiece);
 };

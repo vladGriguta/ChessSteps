@@ -1,177 +1,35 @@
 #include <exception>
 
-#include "board.h"
-#include "player.h"
-#include "rook.h"
-#include "rook.h"
-#include "knight.h"
-#include "bishop.h"
-#include "queen.h"
-#include "pon.h"
+#include "session.h"
 
 int main()
 {
 	// First initialize the board
+	session newSession;
+	string initializeNewSession = "";
 
-	////////////////// WHITE PLAYER ////////////////////////////
-	square* wSquare;
-	piece* wPiece;
-	king* wKing;
-
-	// Then all pieces
-	vector<piece*>_whitePieces = *(new vector<piece*>);
-	player* _whitePlayer;
-
-	// WHITE ROOK
-	wPiece = new rook(true);
-	wSquare = board::access_board()->getSquare(0, 0);
-	wSquare->setOccupier(wPiece);
-	wPiece->setSquare(wSquare);
-	_whitePieces.push_back(wPiece);
-	wPiece = new rook(true);
-	wSquare = board::access_board()->getSquare(7, 0);
-	wSquare->setOccupier(wPiece);
-	wPiece->setSquare(wSquare);
-	_whitePieces.push_back(wPiece);
-
-	// WHITE KNIGHT
-	wPiece = new knight(true);
-	wSquare = board::access_board()->getSquare(1, 0);
-	wSquare->setOccupier(wPiece);
-	wPiece->setSquare(wSquare);
-	_whitePieces.push_back(wPiece);
-	wPiece = new knight(true);
-	wSquare = board::access_board()->getSquare(6, 0);
-	wSquare->setOccupier(wPiece);
-	wPiece->setSquare(wSquare);
-	_whitePieces.push_back(wPiece);
-
-	// WHITE BISHOP
-	wPiece = new bishop(true);
-	wSquare = board::access_board()->getSquare(2, 0);
-	wSquare->setOccupier(wPiece);
-	wPiece->setSquare(wSquare);
-	_whitePieces.push_back(wPiece);
-	wPiece = new bishop(true);
-	wSquare = board::access_board()->getSquare(5, 0);
-	wSquare->setOccupier(wPiece);
-	wPiece->setSquare(wSquare);
-	_whitePieces.push_back(wPiece);
-
-	// WHITE QUEEN
-	wPiece = new queen(true);
-	wSquare = board::access_board()->getSquare(3, 0);
-	wSquare->setOccupier(wPiece);
-	wPiece->setSquare(wSquare);
-	_whitePieces.push_back(wPiece);
-
-	// WHITE KING
-	wKing = new king(true);
-	wSquare = board::access_board()->getSquare(4, 0);
-	wSquare->setOccupier(wKing);
-	wKing->setSquare(wSquare);
-
-	// WHITE PONS
-	for (int i = 0; i < 8; i++){
-		wPiece = new pon(true);
-		wSquare = board::access_board()->getSquare(i, 1);
-		wSquare->setOccupier(wPiece);
-		wPiece->setSquare(wSquare);
-		_whitePieces.push_back(wPiece);
+	while (initializeNewSession != "y" || initializeNewSession != "n"){
+		cout << "Would you like to play some chess? (y/n)\n";
+		cin >> initializeNewSession;
+		if (initializeNewSession == "y"){
+			newSession.initialize();
+			newSession.runSession();
+			initializeNewSession = "";
+		}
+		else if (initializeNewSession == "n"){
+			cout << "\n=======================================================\n";
+			cout << "===============Thank you for your time!================";
+			cout << "\n=======================================================\n";
+			break;
+		}
+		else{
+			cout << "Your response " << initializeNewSession<<" could not be matched.\n";
+			cout << "Please try again!\n";
+		}
 	}
-	_whitePlayer = new player("White Player", true, wKing, _whitePieces);
-
-
-	////////////////// BLACK PLAYER ////////////////////////////
-	square* bSquare;
-	piece* bPiece;
-	king* bKing;
-
-	// Then all pieces
-	vector<piece*>_blackPieces = *(new vector<piece*>);
-	player* _blackPlayer;
-
-	// BLACK ROOK
-	bPiece = new rook(false);
-	bSquare = board::access_board()->getSquare(0, 7);
-	bSquare->setOccupier(bPiece);
-	bPiece->setSquare(bSquare);
-	_blackPieces.push_back(bPiece);
-	bPiece = new rook(false);
-	bSquare = board::access_board()->getSquare(7, 7);
-	bSquare->setOccupier(bPiece);
-	bPiece->setSquare(bSquare);
-	_blackPieces.push_back(bPiece);
-
-	// BLACK KNIGHT
-	bPiece = new knight(false);
-	bSquare = board::access_board()->getSquare(1, 7);
-	bSquare->setOccupier(bPiece);
-	bPiece->setSquare(bSquare);
-	_blackPieces.push_back(bPiece);
-	bPiece = new knight(false);
-	bSquare = board::access_board()->getSquare(6, 7);
-	bSquare->setOccupier(bPiece);
-	bPiece->setSquare(bSquare);
-	_blackPieces.push_back(bPiece);
-
-	// BLACK BISHOP
-	bPiece = new bishop(false);
-	bSquare = board::access_board()->getSquare(2, 7);
-	bSquare->setOccupier(bPiece);
-	bPiece->setSquare(bSquare);
-	_blackPieces.push_back(bPiece);
-	bPiece = new bishop(false);
-	bSquare = board::access_board()->getSquare(5, 7);
-	bSquare->setOccupier(bPiece);
-	bPiece->setSquare(bSquare);
-	_blackPieces.push_back(bPiece);
-
-	// BLACK QUEEN
-	bPiece = new queen(false);
-	bSquare = board::access_board()->getSquare(3, 7);
-	bSquare->setOccupier(bPiece);
-	bPiece->setSquare(bSquare);
-	_blackPieces.push_back(bPiece);
-
-	// BLACK KING
-	bKing = new king(false);
-	bSquare = board::access_board()->getSquare(4, 7);
-	bSquare->setOccupier(bKing);
-	bKing->setSquare(bSquare);
-
-	// BLACK PONS
-	for (int i = 0; i < 8; i++){
-		bPiece = new pon(false);
-		bSquare = board::access_board()->getSquare(i, 6);
-		bSquare->setOccupier(bPiece);
-		bPiece->setSquare(bSquare);
-		_blackPieces.push_back(bPiece);
-	}
-	_blackPlayer = new player("Black Player", false, bKing, _blackPieces);
 
 
 
-
-	//board::access_board()->showBoard(true);
-	_whitePlayer->move();
-	//board::access_board()->showBoard(true);
-	_whitePlayer->move();
-	//board::access_board()->showBoard(true);
-	_whitePlayer->move();
-	//board::access_board()->showBoard(true);
-	_whitePlayer->move();
-	_whitePlayer->move();
-	_whitePlayer->move();
-	_whitePlayer->move();
-	_whitePlayer->move();
-	_whitePlayer->move();
-	_whitePlayer->move();
-	_whitePlayer->move();
-	_whitePlayer->move();
-	_whitePlayer->move();
-	_whitePlayer->move();
-	//board::access_board()->showBoard(true);
 	////////////////////////////////////////////////////////////////////////////
 	return 0;
 }

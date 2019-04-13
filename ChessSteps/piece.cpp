@@ -3,6 +3,7 @@ Write the functions defined in the piece.h header.
 
 */
 #include "piece.h"
+#include "board.h"
 
 // default costructor
 piece::piece(bool isWhite) {
@@ -45,4 +46,17 @@ void piece::decrementMoves(){
 piece* piece::promotion(){
 	// return the same piece for all cases except when dealing with a pon
 	return this;
+}
+
+vector<square*> piece::possibleLocations()
+{
+	vector<square*> locations;
+	// brute force for now
+
+	for (int x = 0; x < 8; x++)
+		for (int y = 0; y < 8; y++)
+			if (this->isMoveAllowed(*(board::access_board()->getSquare(x, y)))){
+				locations.push_back(board::access_board()->getSquare(x, y));
+			}
+	return locations;
 }

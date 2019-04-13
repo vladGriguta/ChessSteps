@@ -74,7 +74,7 @@ bool board::isHorizontalClear(const square& initialSquare,const square& finalSqu
 bool board::isDiagonalClear(const square& initialSquare,const square& finalSquare) const{
 	// check for horizontal move and return error if true
 	if (abs(initialSquare.getX() - finalSquare.getX()) != abs(initialSquare.getY() - finalSquare.getY())){
-		cout << "Not on same diagonal\n";
+		// cout << "Not on same diagonal\n";
 		return false;
 		//throw string("ERROR!! Inputs of function must be on the same diagonal.\n");
 	}

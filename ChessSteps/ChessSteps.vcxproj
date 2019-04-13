@@ -88,6 +88,7 @@
     <ClCompile Include="pon.cpp" />
     <ClCompile Include="queen.cpp" />
     <ClCompile Include="rook.cpp" />
+    <ClCompile Include="session.cpp" />
     <ClCompile Include="square.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +101,7 @@
     <ClInclude Include="pon.h" />
     <ClInclude Include="queen.h" />
     <ClInclude Include="rook.h" />
+    <ClInclude Include="session.h" />
     <ClInclude Include="square.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

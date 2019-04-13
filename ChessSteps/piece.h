@@ -44,7 +44,10 @@ public:
 	// define virtual function for pon promotion (indeed, only overriden in class pon)
 	virtual piece* promotion();
 
+	// return possible locations to move the piece
+	vector<square*> possibleLocations();
+
 	// need to define a fancy way to represent the piece
-	virtual string printPiece() = 0;
+	virtual string printPiece() const = 0;
 };
 #endif

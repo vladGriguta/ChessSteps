@@ -13,6 +13,11 @@ player* session::_currentPlayer = NULL;
 vector<piece*> session::_whitePieces;
 vector<piece*> session::_blackPieces;
 
+// initialize the buffer static objects as well
+player* session::_bufferWhitePlayer = NULL;
+player* session::_bufferBlackPlayer = NULL;
+board* session::_bufferBoard = NULL;
+
 
 void session::initialize(){
 	// this function aims at initializing the board with all pieces and the
@@ -159,17 +164,32 @@ void session::initialize(){
 	_currentPlayer = _whitePlayer;
 }
 
+void session::saveCurrentState(){
+	_bufferWhitePlayer = _whitePlayer;
+	_bufferBlackPlayer = _blackPlayer;
+	_bufferBoard = board::access_board();
+}
+
+void session::reverseOneMove(){
+	_whitePlayer = _bufferWhitePlayer;
+	_blackPlayer = _bufferBlackPlayer;
+	board::overwriteBoard(_bufferBoard);
+}
+
 void session::runSession(){
 	session::initialize();
 
 	while (true) {
+		// always save current state of the dependencies (players, board)
+		session::saveCurrentState();
 		if (!_currentPlayer->inCheckMate()){
 			_currentPlayer->move();
 			_currentPlayer = other_player(_currentPlayer->getName());
 		}
 		else{
 			cout << "The game is OVER. The winner is " << other_player(_currentPlayer->getName())->getName() << "\n";
-			cout << "CONGRATULATIONS!";
+			cout << "CONGRATULATIONS!\n";
+			break;
 		}
 	}
 

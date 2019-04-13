@@ -52,7 +52,7 @@ public:
 	bool inCheck() const;
 
 	// check if player in check mate
-	bool inCheckMate() const;
+	bool inCheckMate();
 
 	// try to execute one move
 	bool tryMove(square* fromLocation, square* toLocation);

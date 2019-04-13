@@ -54,8 +54,18 @@ vector<square*> piece::possibleLocations()
 	// brute force for now
 	for (int x = 0; x < 8; x++)
 		for (int y = 0; y < 8; y++)
-			if (this->isMoveAllowed(*(board::access_board()->getSquare(x, y)))){
+		{
+			// check that the destination square does not contain a piece of the player making the move
+			if (board::access_board()->getSquare(x, y)->getOccupier() != NULL &&
+				board::access_board()->getSquare(x, y)->getOccupier()->isWhite() == this->isWhite())
+			{
+				continue;
+			}
+			// finaly check if move is allowed
+			else if (this->isMoveAllowed(*(board::access_board()->getSquare(x, y))))
+			{
 				locations.push_back(board::access_board()->getSquare(x, y));
 			}
+		}
 	return locations;
 }

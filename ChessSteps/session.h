@@ -29,12 +29,20 @@ private:
 
 	static player* _currentPlayer;
 
+	// elements that act as a buffer for current state of game
+	static player* _bufferWhitePlayer;
+	static player* _bufferBlackPlayer;
+	static board* _bufferBoard;
+
 public:
 	// initializer
 	static void initialize();
 
 	// destructor
 	~session();
+
+	static void saveCurrentState();
+	static void reverseOneMove();
 
 	// run session
 	void runSession();

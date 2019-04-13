@@ -49,25 +49,48 @@ bool player::inCheck() const{
 	return false;
 }
 
-bool player::inCheckMate() const{
-	return false;
-	/*
+bool player::inCheckMate(){
+
 	if (this->inCheck())
 	{
-		for (auto it_pieces = _remainingPieces.begin(); it_pieces != _remainingPieces.end(); ++it_pieces)
+		cout << "Checking if the player is in check mate........\n";
+		for (vector<piece*>::iterator it_pieces = _remainingPieces.begin(); it_pieces != _remainingPieces.end(); ++it_pieces)
 		{
 			// get the possible destination of each piece
 			vector<square*> possibleDestinations = (*it_pieces)->possibleLocations();
-
-			for (auto it_loc = possibleDestinations.begin(); it_loc != possibleDestinations.begin(); ++it_loc){
-
+			for (vector<square*>::iterator it_loc = possibleDestinations.begin(); it_loc != possibleDestinations.end(); ++it_loc){
+				// check which try function is appropriate
+				if ((*it_loc)->getOccupier() != NULL && (*it_loc)->getOccupier()->isWhite() == this->isWhite())
+				{
+					// tryCapture function
+					if (tryCapture((*it_pieces)->getSquare(), (*it_loc))){
+						cout << "Found that the player is not in check mate!!!\n";
+						cout << "One possible move to get out of check is: ";
+						cout << "from " << (*it_pieces)->getSquare()->getX() << ", " << (*it_pieces)->getSquare()->getY()
+							<< "\nto " << (*it_loc)->getX() << ", " << (*it_loc)->getY() << "\n";
+						return false;
+					}
+				}
+				else{
+					// tryMove function
+					if (tryMove((*it_pieces)->getSquare(), (*it_loc)))
+					{
+						// reverse the move and return false
+						// session::reverseOneMove();
+						cout << "Found that the player is not in check mate!!!\n";
+						cout << "One possible move to get out of check is: ";
+						cout << "from " << (*it_pieces)->getSquare()->getX() << ", " << (*it_pieces)->getSquare()->getY()
+							<< "\nto " << (*it_loc)->getX() << ", " << (*it_loc)->getY() << "\n";
+						return false;
+					}
+				}
 			}
 		}
 	}
 	else{
 		return false;
 	}
-	*/
+	return true;
 }
 
 bool player::tryMove(square* fromLocation, square* toLocation){
@@ -106,6 +129,7 @@ bool player::tryMove(square* fromLocation, square* toLocation){
 				toLocation->setOccupier(NULL);
 				// decrement the number of moves of the piece
 				fromLocation->getOccupier()->decrementMoves();
+
 			}
 
 			// in case of pons, check if can be promoted

@@ -36,6 +36,9 @@ public:
 	// access the static member board
 	static board* access_board();
 
+	// overwrite the board with a previous version of it
+	static void overwriteBoard(board* previousBoard);
+
 	// Default destructor
 	~board();
 

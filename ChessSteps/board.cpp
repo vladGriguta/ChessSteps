@@ -20,6 +20,11 @@ board* board::access_board()
 }
 
 
+void board::overwriteBoard(board* previousBoard)
+{
+	_board = previousBoard;
+}
+
 // default destructor
 board::~board(){
 	for (int i = 0; i < 8; i++){

@@ -15,8 +15,10 @@ bool queen::isMoveAllowed(square& location){
 	// valid move if moving on a clear diagonal
 	else if (board::access_board()->isDiagonalClear(*(this->getSquare()), location))
 		return true;
-	else
+	else{
+		cout << "QQQQQQUEEN could not be moved\n";
 		return false;
+	}
 }
 
 vector<square> queen::possibleLocations(){

@@ -81,15 +81,97 @@ int main()
 	}
 	_whitePlayer = new player("White Player", true, wKing, _whitePieces);
 
-	board::access_board()->showBoard(true);
+
+	////////////////// BLACK PLAYER ////////////////////////////
+	square* bSquare;
+	piece* bPiece;
+	king* bKing;
+
+	// Then all pieces
+	vector<piece*>_blackPieces = *(new vector<piece*>);
+	player* _blackPlayer;
+
+	// BLACK ROOK
+	bPiece = new rook(false);
+	bSquare = board::access_board()->getSquare(0, 7);
+	bSquare->setOccupier(bPiece);
+	bPiece->setSquare(bSquare);
+	_blackPieces.push_back(bPiece);
+	bPiece = new rook(false);
+	bSquare = board::access_board()->getSquare(7, 7);
+	bSquare->setOccupier(bPiece);
+	bPiece->setSquare(bSquare);
+	_blackPieces.push_back(bPiece);
+
+	// BLACK KNIGHT
+	bPiece = new knight(false);
+	bSquare = board::access_board()->getSquare(1, 7);
+	bSquare->setOccupier(bPiece);
+	bPiece->setSquare(bSquare);
+	_blackPieces.push_back(bPiece);
+	bPiece = new knight(false);
+	bSquare = board::access_board()->getSquare(6, 7);
+	bSquare->setOccupier(bPiece);
+	bPiece->setSquare(bSquare);
+	_blackPieces.push_back(bPiece);
+
+	// BLACK BISHOP
+	bPiece = new bishop(false);
+	bSquare = board::access_board()->getSquare(2, 7);
+	bSquare->setOccupier(bPiece);
+	bPiece->setSquare(bSquare);
+	_blackPieces.push_back(bPiece);
+	bPiece = new bishop(false);
+	bSquare = board::access_board()->getSquare(5, 7);
+	bSquare->setOccupier(bPiece);
+	bPiece->setSquare(bSquare);
+	_blackPieces.push_back(bPiece);
+
+	// BLACK QUEEN
+	bPiece = new queen(false);
+	bSquare = board::access_board()->getSquare(3, 7);
+	bSquare->setOccupier(bPiece);
+	bPiece->setSquare(bSquare);
+	_blackPieces.push_back(bPiece);
+
+	// BLACK KING
+	bKing = new king(false);
+	bSquare = board::access_board()->getSquare(4, 7);
+	bSquare->setOccupier(bKing);
+	bKing->setSquare(bSquare);
+
+	// BLACK PONS
+	for (int i = 0; i < 8; i++){
+		bPiece = new pon(false);
+		bSquare = board::access_board()->getSquare(i, 6);
+		bSquare->setOccupier(bPiece);
+		bPiece->setSquare(bSquare);
+		_blackPieces.push_back(bPiece);
+	}
+	_blackPlayer = new player("Black Player", false, bKing, _blackPieces);
+
+
+
+
+	//board::access_board()->showBoard(true);
 	_whitePlayer->move();
-	board::access_board()->showBoard(true);
+	//board::access_board()->showBoard(true);
 	_whitePlayer->move();
-	board::access_board()->showBoard(true);
+	//board::access_board()->showBoard(true);
 	_whitePlayer->move();
-	board::access_board()->showBoard(true);
+	//board::access_board()->showBoard(true);
 	_whitePlayer->move();
-	board::access_board()->showBoard(true);
+	_whitePlayer->move();
+	_whitePlayer->move();
+	_whitePlayer->move();
+	_whitePlayer->move();
+	_whitePlayer->move();
+	_whitePlayer->move();
+	_whitePlayer->move();
+	_whitePlayer->move();
+	_whitePlayer->move();
+	_whitePlayer->move();
+	//board::access_board()->showBoard(true);
 	////////////////////////////////////////////////////////////////////////////
 	return 0;
 }

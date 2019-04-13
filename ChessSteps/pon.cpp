@@ -8,7 +8,7 @@ pon::pon(bool _isWhite) : piece(_isWhite) {}
 // default destructor
 pon::~pon() {
 	_isWhite = NULL;
-	_hasMoved = NULL;
+	_numberMoves = 0;
 	delete _square;
 }
 
@@ -21,33 +21,38 @@ bool pon::isMoveAllowed(square& location){
 	int translationY = location.getY() - this->getSquare()->getY();
 
 	// to keep same convention for both sides, take the negative of the black y translation
-	if (!this->isWhite())
+	if (!(this->isWhite()))
 		translationY = (-1) * translationY;
 
 	// There are 4 cases that need treatment
-	// valid move if moving 1 square forward to unoccupied square
-	if ((location.getOccupier() == NULL) && translationY == 1 && translationX == 0){
+	// valid move if moving 1 square forward to unnocupied square
+	if ( (location.getOccupier() == NULL) && translationY == 1 && translationX == 0){
 		allowed =  true;
 	}
 
 	// second case is the oportunity to move 2 spaces the first time
-	else if (!(this->_hasMoved) && translationY == 2 && translationX == 0 &&
+	else if ((this->getNumberMoves()==0) && translationY == 2 && translationX == 0 &&
 		board::access_board()->isVerticalClear(*(this->getSquare()), location))
 	{
 		allowed = true;
 	}
 
 	// valid move if capturing a piece on adjacent diagonal
-	else if ((location.getOccupier()->isWhite() == this->isWhite()) && translationY == 1 &&
-		abs(translationX) == 1)
-	{
-		allowed = true;
+	else if (location.getOccupier() != NULL){
+		if ((location.getOccupier()->isWhite() != this->isWhite()) &&
+			translationY == 1 && abs(translationX) == 1)
+		{
+			allowed = true;
+		}
 	}
 
 	else{
 		allowed = false;
 	}
-
+	if (allowed == true)
+		cout << "Pon returned allowed.\n";
+	else
+		cout << "Pon returned not allowed.\n";
 	return allowed;
 }
 
@@ -62,7 +67,7 @@ vector<square> pon::possibleLocations(){
 	return locations;
 }
 
-void pon::promotion(){
+piece* pon::promotion(){
 	// in the special case of promotion, delete the pon and create a new piece to replace it
 	// always promote to queen for now
 	
@@ -71,8 +76,9 @@ void pon::promotion(){
 
 	newPiece->setSquare(current_square);
 	current_square->setOccupier(newPiece);
-	// current piece goes out of scope
-	this->~pon();
+
+	// return the new piece
+	return newPiece;
 }
 
 string pon::printPiece(){

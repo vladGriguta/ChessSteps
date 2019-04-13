@@ -41,7 +41,7 @@ public:
 	void setOccupier(piece* _piece);
 
 	// return piece (or NULL if none)
-	piece* getOccupier() const;
+	piece* getOccupier();
 };
 
 

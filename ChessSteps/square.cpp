@@ -32,6 +32,6 @@ void square::setOccupier(piece* piece){
 }
 
 // return piece (or NULL if none)
-piece* square::getOccupier() const{
+piece* square::getOccupier(){
 	return _piece;
 }

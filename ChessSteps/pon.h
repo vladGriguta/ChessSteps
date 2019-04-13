@@ -25,7 +25,7 @@ public:
 	vector<square> possibleLocations();
 
 	// This class has a special functionality: Promotion
-	void promotion();
+	piece* promotion();
 
 
 	// need to define a fancy way to represent the piece

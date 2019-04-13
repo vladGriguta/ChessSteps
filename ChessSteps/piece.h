@@ -20,7 +20,7 @@ class piece
 protected:
 	bool _isWhite;
 	square* _square;
-	bool _hasMoved;
+	int _numberMoves;
 
 public:
 	// Constructor 
@@ -37,6 +37,12 @@ public:
 	// This check is done for each piece in part (rook, knight, etc..)
 	virtual bool isMoveAllowed(square& location) = 0;
 
+	int getNumberMoves() const;
+	void incrementMoves();
+	void decrementMoves();
+
+	// define virtual function for pon promotion (indeed, only overriden in class pon)
+	virtual piece* promotion();
 
 	// need to define a fancy way to represent the piece
 	virtual string printPiece() = 0;

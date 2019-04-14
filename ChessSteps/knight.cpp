@@ -4,6 +4,10 @@
 // default constructor
 knight::knight(bool _isWhite) : piece(_isWhite) {}
 
+knight* knight::clone() const {
+	return new knight(this);
+}
+
 // the check move function
 bool knight::isMoveAllowed(square& location){
 	int translationX = abs(location.getX() - this->getSquare()->getX());

@@ -25,6 +25,8 @@ private:
 	// declare the board as a static instance of the class board that is
 	// then the same for all instances
 	static board* _board;
+
+	board* _boardAsBuffer;
 	// define 2D array for easy access within the class
 	square* _squares[8][8];
 
@@ -33,11 +35,18 @@ public:
 	// default constructor
 	board();
 
+	// copy assignment
+	//board(const board &b);
+
+	board* clone() const;
+
 	// access the static member board
 	static board* access_board();
 
+	board* access_buffer();
+
 	// overwrite the board with a previous version of it
-	static void overwriteBoard(board* previousBoard);
+	void overwriteBoard(board& previousBoard);
 
 	// Default destructor
 	~board();

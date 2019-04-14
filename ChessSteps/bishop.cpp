@@ -4,6 +4,10 @@
 // default constructor
 bishop::bishop(bool _isWhite) : piece(_isWhite) {}
 
+bishop* bishop::clone() const {
+	return new bishop(this);
+}
+
 // the check move function
 bool bishop::isMoveAllowed(square& location){
 	// valid move if moving on a clear diagonal

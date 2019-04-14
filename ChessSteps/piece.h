@@ -25,6 +25,15 @@ protected:
 public:
 	// Constructor 
 	piece(bool _isWhite);
+
+	// Copy constructor
+	piece(piece &p);
+
+	// copy assignment
+	piece & operator=(piece &p);
+	void overwritePiece(piece &p);
+	virtual piece* clone() const = 0;
+
 	// Default destructor (pure virtual)
 	~piece();
 

@@ -5,6 +5,10 @@
 // default constructor
 pon::pon(bool _isWhite) : piece(_isWhite) {}
 
+pon* pon::clone() const {
+	return new pon(this);
+}
+
 // default destructor
 pon::~pon() {
 	_isWhite = NULL;

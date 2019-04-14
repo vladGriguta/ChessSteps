@@ -11,6 +11,25 @@ board::board(){
 	}
 }
 
+/*
+// copy constructor
+board::board(const board &b){
+	for (int i = 0; i < 8; i++){
+		for (int j = 0; j < 8; j++){
+			this->access_buffer()->_squares[i][j] = new square(i, j);
+		}
+	}
+	for (int i = 0; i < 8; i++){
+		for (int j = 0; j < 8; j++){
+			this->access_buffer()->_squares[i][j]->overwriteSquare(*b.access_board()->getSquare(i, j));
+			cout << "square1 " << b.access_board()->getSquare(i, j)<<"\n";
+			cout << "square2 " << this->access_buffer()->_squares[i][j] << "\n";
+		}
+	}
+
+}
+*/
+
 // access the static member board
 board* board::access_board()
 {
@@ -19,20 +38,47 @@ board* board::access_board()
 	return _board;
 }
 
-
-void board::overwriteBoard(board* previousBoard)
+board* board::access_buffer()
 {
-	_board = previousBoard;
+	if (_boardAsBuffer == NULL)
+		_boardAsBuffer = new board();
+	return _boardAsBuffer;
+}
+
+board* board::clone() const {
+	return new board(*this->_board);
+}
+
+
+void board::overwriteBoard(board& previousBoard)
+{
+	cout << "In overwrite board\n";
+	for (int i = 0; i < 8; i++){
+		for (int j = 0; j < 8; j++){
+			cout << "in for loop\n";
+			cout << previousBoard.access_buffer() << "\n";
+			if (_squares[i][j] == previousBoard.access_buffer()->getSquare(i, j)){
+				cout << "SMTH is wrong\n";
+				cout << _squares[i][j] << " " <<
+					previousBoard.access_buffer()->getSquare(i, j) << "\n";
+			}
+			cout << "in for loop\n";
+			//_board->_squares[i][j]->operator=(*previousBoard.access_board()->getSquare(i, j));
+			_board->_squares[i][j]->overwriteSquare(*previousBoard.access_buffer()->getSquare(i, j));
+		}
+	}
 }
 
 // default destructor
 board::~board(){
+	/*
 	for (int i = 0; i < 8; i++){
 		for (int j = 0; j < 8; j++)
 			delete _squares[i][j];
 		delete _squares[i];
 		}
 	delete _squares;
+	*/
 }
 
 // check vertical

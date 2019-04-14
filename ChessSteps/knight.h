@@ -15,6 +15,7 @@ public:
 	// default constructor
 	knight(bool isWhite);
 
+	virtual knight* clone() const;
 	// default destructor already called when base class (piece) goes out of scope
 
 

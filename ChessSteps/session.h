@@ -10,6 +10,7 @@ of chess.
 #define SESSION_H
 
 #include <vector>
+#include <stack>
 
 #include "board.h"
 #include "player.h"
@@ -30,9 +31,9 @@ private:
 	static player* _currentPlayer;
 
 	// elements that act as a buffer for current state of game
-	static player* _bufferWhitePlayer;
-	static player* _bufferBlackPlayer;
-	static board* _bufferBoard;
+	static stack<player> _bufferWhitePlayer;
+	static stack<player> _bufferBlackPlayer;
+	static stack<board> _bufferBoard;
 
 public:
 	// initializer
@@ -41,7 +42,7 @@ public:
 	// destructor
 	~session();
 
-	static void saveCurrentState();
+	static void stackCurrentState();
 	static void reverseOneMove();
 
 	// run session

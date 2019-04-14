@@ -4,6 +4,10 @@
 // default constructor
 rook::rook(bool _isWhite) : piece(_isWhite) {}
 
+rook* rook::clone() const {
+	return new rook(this);
+}
+
 // the check move function
 bool rook::isMoveAllowed(square& location){
 	// check if moving along a clear vertical

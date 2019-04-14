@@ -4,6 +4,10 @@
 // default constructor
 queen::queen(bool _isWhite) : piece(_isWhite) {}
 
+
+queen* queen::clone() const {
+	return new queen(this);
+}
 // the check move function
 bool queen::isMoveAllowed(square& location){
 	// check if moving along a clear vertical

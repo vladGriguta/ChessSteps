@@ -12,6 +12,37 @@ piece::piece(bool isWhite) {
 	_numberMoves = 0;
 }
 
+// copy constructor
+piece::piece(piece &p){
+	_isWhite = p.isWhite();
+	_numberMoves = p.getNumberMoves();
+	_square = p.getSquare();
+}
+
+// Coppy assignment operator
+piece & piece ::operator=(piece &p){
+	cout << "Copy assignment!" << endl;
+	if (&p == this)
+		return *this;
+	// Start by deleting what the left object holds
+	_numberMoves = 0;
+	_isWhite = 0;
+	_square = NULL;
+	if (p.getSquare() != NULL){
+		_square = new square(p.getSquare()->getX(), p.getSquare()->getY());
+	}
+	// Coppy the variables
+	_numberMoves = p.getNumberMoves(); _isWhite = p.isWhite();
+	return *this;
+}
+
+void piece::overwritePiece(piece &p){
+	_numberMoves = 0;
+	_isWhite = 0;
+	_square = NULL;
+}
+
+
 piece::~piece(){
 	_isWhite = NULL;
 	_numberMoves = 0;

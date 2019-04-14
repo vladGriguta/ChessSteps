@@ -30,6 +30,13 @@ public:
 	square(int x, int y);
 	// parametrised constructor using 1D vector
 	square(int pos);
+	// copy constructor
+	square(square &sq);
+
+	// copy assignment
+	square & operator=(square &s);
+	void overwriteSquare(square& s);
+
 	// default destructor
 	~square();
 

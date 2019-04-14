@@ -16,6 +16,7 @@ public:
 	// default constructor
 	pon(bool isWhite);
 
+	virtual pon* clone() const;
 	// default destructor already called when base class (piece) goes out of scope
 	~pon();
 

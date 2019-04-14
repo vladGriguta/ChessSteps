@@ -15,6 +15,7 @@ public:
 	// default constructor
 	queen(bool isWhite);
 
+	virtual queen* clone() const;
 	// default destructor already called when base class (piece) goes out of scope
 
 	// here is the stage where we can fully assess whether a move is allowed

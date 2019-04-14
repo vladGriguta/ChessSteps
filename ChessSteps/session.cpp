@@ -13,10 +13,11 @@ player* session::_currentPlayer = NULL;
 vector<piece*> session::_whitePieces;
 vector<piece*> session::_blackPieces;
 
+
 // initialize the buffer static objects as well
-player* session::_bufferWhitePlayer = NULL;
-player* session::_bufferBlackPlayer = NULL;
-board* session::_bufferBoard = NULL;
+stack<player> session::_bufferWhitePlayer;
+stack<player> session::_bufferBlackPlayer;
+stack<board> session::_bufferBoard;
 
 
 void session::initialize(){
@@ -164,27 +165,63 @@ void session::initialize(){
 	_currentPlayer = _whitePlayer;
 }
 
-void session::saveCurrentState(){
-	_bufferWhitePlayer = _whitePlayer;
-	_bufferBlackPlayer = _blackPlayer;
-	_bufferBoard = board::access_board();
+void session::stackCurrentState(){
+	player tempWhitePlayer(*_whitePlayer);
+	_bufferWhitePlayer.push(tempWhitePlayer);
+	cout << "Name of player copy " << tempWhitePlayer.getName() << "\n";
+	cout << "Name of player player " << _whitePlayer->getName() << "\n";
+	cout << "Address of copy: " << &tempWhitePlayer << "\n";
+	cout << "Address of player: " << _whitePlayer << "\n";
+	player tempBlackPlayer(*_blackPlayer);
+	_bufferBlackPlayer.push(tempBlackPlayer);
+	cout << "Got here in stack!!\n";
+	//board tempBoard(*(board::access_board()));
+	cout << "Got to the end of board copy constructor!\n";
+	//_bufferBoard.push(tempBoard);
+	_bufferBoard.push(*board::access_board()->clone());
+	cout << "pushed constructor to buffer!\n";
+	//cout << "Address of copy: " << tempBoard.access_buffer()->getSquare(0,0) << "\n";
+	cout << "Address of board: " << board::access_board()->getSquare(0,0) << "\n";
+	cout << "Current state stacked!\n";
+	cout << "Number of board instances saved: " << _bufferBoard.size() << "\n";
 }
 
 void session::reverseOneMove(){
-	_whitePlayer = _bufferWhitePlayer;
-	_blackPlayer = _bufferBlackPlayer;
-	board::overwriteBoard(_bufferBoard);
+	if (_bufferBoard.size() > 1){
+		//cout << "Inside the reverse function...\n";
+		//cout << "Name of player player " << _whitePlayer->getName() << "\n";
+		//cout << "Stored piece " << _bufferWhitePlayer.top().getName() << "  " << _bufferWhitePlayer.top().isWhite() << "\n";
+		_bufferWhitePlayer.pop();
+		_whitePlayer->overwritePlayer((_bufferWhitePlayer.top()));
+		//cout << "Name of player player " << _whitePlayer->getName() << "\n";
+		//cout << "Name of player player " << _whitePlayer->getName() << "\n";
+		_bufferBlackPlayer.pop();
+		_blackPlayer->overwritePlayer((_bufferBlackPlayer.top()));
+
+		_bufferBoard.pop();
+		cout << "buffer has " << _bufferBoard.size() << "\n";
+		board::access_board()->overwriteBoard(*(_bufferBoard.top().access_buffer()));
+		//board::access_board()->showBoard(true);
+		_bufferBoard.top().access_buffer()->showBoard(true);
+		cout << "Inside the reverse function...\n";
+	}
+	else{
+		cout << "You are already at the beggining of the game!!!!\n";
+	}
+
 }
 
 void session::runSession(){
 	session::initialize();
-
+	session::stackCurrentState();
+	cout << "Got here!!";
 	while (true) {
-		// always save current state of the dependencies (players, board)
-		//session::saveCurrentState();
+		// always stack current state of the dependencies (players, board)
 		if (!_currentPlayer->inCheckMate()){
+			cout << "Got here!!";
 			_currentPlayer->move();
-			_currentPlayer = other_player(_currentPlayer->getName());
+			cout << "Got here!!\n";
+			_currentPlayer = other_player(_currentPlayer->getName()); // works for when reverse move is called as well
 		}
 		else{
 			cout << "The game is OVER. The winner is " << other_player(_currentPlayer->getName())->getName() << "\n\n\n";
@@ -214,9 +251,11 @@ session::~session(){
 
 
 	// Empty buffers as well
-	_bufferWhitePlayer = NULL;
-	_bufferBlackPlayer = NULL;
-	_bufferBoard = NULL;
+	while (!_bufferBoard.empty()){
+		_bufferWhitePlayer.pop();
+		_bufferBlackPlayer.pop();
+		_bufferBoard.pop();
+	}
 
 }
 
@@ -227,7 +266,9 @@ player* session::other_player(string current_player_name){
 	else if (current_player_name == _blackPlayer->getName())
 		return _whitePlayer;
 	else{
-		cout << "Other player was not identified";
+		cout << "Oponent of " << current_player_name << " was not identified\n";
+		cout << "Black player name " << _blackPlayer->getName() << "\n";
+		cout << "White player name " << _whitePlayer->getName() << "\n";
 		//throw string("Error!! The name of the player could not be identified!\n");
 	}
 }

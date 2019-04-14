@@ -4,6 +4,10 @@
 // default constructor
 king::king(bool isWhite) : piece(isWhite) {}
 
+king* king::clone() const {
+	return new king(this);
+}
+
 // the check move function
 bool king::isMoveAllowed(square& location){
 

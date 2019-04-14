@@ -33,20 +33,28 @@ public:
 	// Only parametrised costructor
 	player(string name, bool isWhite, king* inking, vector<piece*> pieces);
 
+	// Copy constructor
+	player(const player &pl);
+
 	// default destructor
 	~player();
+
+	// Copy assignment operator
+	player & operator=(const player &pl);
+	void overwritePlayer(const player &pl);
 
 	// get name (needed for checks in session class)
 	string getName() const;
 
 	// return the remaining pieces
 	vector<piece*> getRemainingPieces() const;
+	vector<piece*> getCapturedPieces() const;
 
 	// return color of player
 	bool isWhite() const;
 
 	// get king
-	piece* getKing() const;
+	king* getKing() const;
 
 	// check if player is in check
 	bool inCheck() const;

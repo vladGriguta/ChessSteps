@@ -54,6 +54,9 @@ bool player::inCheckMate(){
 	if (this->inCheck())
 	{
 		cout << "Checking if the player is in check mate........\n";
+
+		// temporarily disable cout
+		cout.setstate(std::ios_base::failbit);
 		for (vector<piece*>::iterator it_pieces = _remainingPieces.begin(); it_pieces != _remainingPieces.end(); ++it_pieces)
 		{
 			// get the possible destination of each piece
@@ -86,6 +89,7 @@ bool player::inCheckMate(){
 				}
 			}
 		}
+		cout.clear();
 	}
 	else{
 		return false;

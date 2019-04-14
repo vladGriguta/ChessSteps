@@ -181,14 +181,16 @@ void session::runSession(){
 
 	while (true) {
 		// always save current state of the dependencies (players, board)
-		session::saveCurrentState();
+		//session::saveCurrentState();
 		if (!_currentPlayer->inCheckMate()){
 			_currentPlayer->move();
 			_currentPlayer = other_player(_currentPlayer->getName());
 		}
 		else{
-			cout << "The game is OVER. The winner is " << other_player(_currentPlayer->getName())->getName() << "\n";
-			cout << "CONGRATULATIONS!\n";
+			cout << "The game is OVER. The winner is " << other_player(_currentPlayer->getName())->getName() << "\n\n\n";
+			cout << "=================================CONGRATULATIONS=================================!\n";
+			cout << "==================================" << other_player(_currentPlayer->getName())->getName()
+				<< "==================================!\n\n\n";
 			break;
 		}
 	}
@@ -198,6 +200,7 @@ void session::runSession(){
 
 session::~session(){
 	// Delete pieces
+
 	for (auto itr = _whitePieces.begin(); itr != _whitePieces.end(); ++itr)
 		delete *itr;
 	_whitePieces.clear();
@@ -206,9 +209,15 @@ session::~session(){
 		delete *itr;
 	_blackPieces.clear();
 
-	// Delete players
-	delete _whitePlayer;
-	delete _blackPlayer;
+	_whitePlayer = NULL;
+	_blackPlayer = NULL;
+
+
+	// Empty buffers as well
+	_bufferWhitePlayer = NULL;
+	_bufferBlackPlayer = NULL;
+	_bufferBoard = NULL;
+
 }
 
 

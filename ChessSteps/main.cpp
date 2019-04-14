@@ -20,7 +20,7 @@ int main()
 			cout << "\n=======================================================\n";
 			cout << "===============Thank you for your time!================";
 			cout << "\n=======================================================\n";
-			return 0;
+			break;
 		}
 		else{
 			cout << "Your response " << initializeNewSession<<" could not be matched.\n";

@@ -119,6 +119,24 @@ bool player::tryMove(square* fromLocation, square* toLocation){
 			// increment the number of moves of the piece
 			toLocation->getOccupier()->incrementMoves();
 			
+			// if castle happens need to move the rook as well
+			if (toLocation->getOccupier()->printPiece().at(1) == 'K' && abs(toLocation->getX() - fromLocation->getX()) == 2){
+				int x_rook = toLocation->getX() > fromLocation->getX() ? 7 : 0;
+				int y_rook = this->isWhite() ? 0 : 7;
+
+				// new coordinates of rook
+				int x_new_rook = (x_rook==0) ? fromLocation->getX() - 1 : fromLocation->getX() + 1;
+				int y_new_rook = y_rook;
+				// change the location of the moved piece
+				board::access_board()->getSquare(x_rook, y_rook)->getOccupier()->
+					setSquare(board::access_board()->getSquare(x_new_rook, y_new_rook));
+				board::access_board()->getSquare(x_new_rook, y_new_rook)->
+					setOccupier(board::access_board()->getSquare(x_rook, y_rook)->getOccupier());
+				board::access_board()->getSquare(x_rook, y_rook)->setOccupier(NULL);
+				// increment the number of moves of the piece
+				board::access_board()->getSquare(x_new_rook, y_new_rook)->getOccupier()->incrementMoves();
+			}
+
 			// if player in check, go back and un-validate the move
 			if (this->inCheck()){
 				if (currentState)
